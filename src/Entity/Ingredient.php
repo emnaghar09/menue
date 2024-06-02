@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation as Serializer;
 
-
 /**
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
  */
@@ -19,21 +18,16 @@ class Ingredient
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"show_ingrediennt"})
-     * 
+     * @Serializer\Groups({"show_ingredient", "show_ingredientList"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Serializer\Groups({"show_ingrediennt"})
+     * @Serializer\Groups({"show_ingredient", "show_dish"})
      */
     private $name;
 
-    /**
-     * @ORM\OneToMany(targetEntity=IngredientList::class, mappedBy="ingredient")
-     */
-    private $ingredientLists;
 
     public function __construct()
     {
@@ -65,25 +59,4 @@ class Ingredient
         return $this->ingredientLists;
     }
 
-    public function addIngredientList(IngredientList $ingredientList): self
-    {
-        if (!$this->ingredientLists->contains($ingredientList)) {
-            $this->ingredientLists[] = $ingredientList;
-            $ingredientList->setIngredient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIngredientList(IngredientList $ingredientList): self
-    {
-        if ($this->ingredientLists->removeElement($ingredientList)) {
-            // set the owning side to null (unless already changed)
-            if ($ingredientList->getIngredient() === $this) {
-                $ingredientList->setIngredient(null);
-            }
-        }
-
-        return $this;
-    }
 }

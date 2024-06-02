@@ -6,31 +6,94 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\IngredientService;
+use App\Service\IngredientListService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Service\DishService;
+
 
 class IngredientController extends AbstractController
 {
+    
+public $ingredientListService;
+public $dishService;
+public function __construct(IngredientListService $ingredientListService, DishService $dishService){
+
+    $this->ingredientListService=$ingredientListService;
+    $this->dishService=$dishService;
+
+}
     /**
-     * @Route("/ingredient", name="app_ingredient")
-     */
-    public function index(): Response
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/IngredientController.php',
-        ]);
-    }
-    /**
-     * @Rest\Get("/allIngredient", name="show_ingrediennt")
-      * @Rest\View(serializerGroups={"show_ingrediennt"})
-     */
+     * @Rest\Get("/ingredient", name="show_ingredient")
+     * @Rest\View(serializerGroups={"show_ingrediennt"})
+    */
     public function showAllIngredient(IngredientService $ingredientService)
     {
-        $ingredients = $ingredientService->getAllIngredients();
-        return new JsonResponse($ingredients);
+        return  $ingredientService->getAllIngredients();
+    }
+    /**
+     * @Rest\Get("/ingredient/{id}")
+     * @Rest\View(serializerGroups={"show_ingrediennt"})
+     */
+    public function getIngredientById($id,IngredientService $ingredientService){
+        $jsonData = $ingredientService->getById($id);
+        return new JsonResponse($jsonData, 200, [], true);
     }
 
+    /**
+     * @Rest\Post("/ingredient", name="add_ingredient")
+    */
+    public function addIngredient(Request $request, IngredientService $ingredientService){
+        return  $ingredientService->addIngredient($request->getContent());
+    }
+
+    /**
+     * @Rest\Get("/ingredientList")
+     * @Rest\View(serializerGroups={"show_ingredientList"})
+     */
+    public function getIngredientList()
+    {
+        $data = $this->ingredientListService->getIngredientList();
+        return new JsonResponse($data, 200, [], true);
+    }
+
+    /**
+     * @Rest\Post("/ingredientList")
+     * @Rest\View(serializerGroups={"show_ingredientList"})
+     */
+    public function addIngredientList(Request $request)
+    {
+        return  $this->ingredientListService->addIngredientList($request->getContent());
+    }
+
+    /**
+     * @Rest\Get("/ingredientbyDish/{dishId}")
+     * @Rest\View(serializerGroups={"show_ingredientList"})
+     */
+    public function getIngredientListByDish($dishId){
+        $jsonData =  $this->ingredientListService->getIngredientListByDish($dishId);
+        return new JsonResponse($jsonData, 200, [], true);
+    }
+
+
+        /**
+     * @Rest\Get("/dish")
+     * @Rest\View(serializerGroups={"show_dish"})
+     */
+    public function getDish()
+    {
+        $data = $this->dishService->getDish();
+        return new JsonResponse($data, 200, [], true);
+    }
+
+    /**
+     * @Rest\Post("/dish")
+     * @Rest\View(serializerGroups={"show_dish"})
+     */
+    public function addDish(Request $request)
+    {
+        return  $this->dishService->addDish($request->getContent());
+    }
 }

@@ -47,14 +47,14 @@ class IngredientListRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return IngredientList[] Returns an array of IngredientList objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return IngredientList[] Returns an array of IngredientList objects
+    */
+    
+    public function findBydish($value)
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
+            ->andWhere('i.dish = :val')
             ->setParameter('val', $value)
             ->orderBy('i.id', 'ASC')
             ->setMaxResults(10)
@@ -62,7 +62,7 @@ class IngredientListRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
+  
 
     /*
     public function findOneBySomeField($value): ?IngredientList

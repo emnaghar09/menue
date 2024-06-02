@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\IngredientListRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=IngredientListRepository::class)
@@ -14,21 +16,27 @@ class IngredientList
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"show_ingredientList"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Dish::class, inversedBy="ingredientLists")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"show_ingredientList"})
      */
     private $dish;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ingredient::class, inversedBy="ingredientLists")
+     * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="ingredientLists")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"show_ingredientList", "show_dish"})
      */
     private $ingredient;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"show_ingredientList"})
      */
     private $quantity;
 
@@ -37,24 +45,24 @@ class IngredientList
         return $this->id;
     }
 
-    public function getDish(): ?dish
+    public function getDish(): ?Dish
     {
         return $this->dish;
     }
 
-    public function setDish(?dish $dish): self
+    public function setDish(?Dish $dish): self
     {
         $this->dish = $dish;
 
         return $this;
     }
 
-    public function getIngredient(): ?ingredient
+    public function getIngredient(): ?Ingredient
     {
         return $this->ingredient;
     }
 
-    public function setIngredient(?ingredient $ingredient): self
+    public function setIngredient(?Ingredient $ingredient): self
     {
         $this->ingredient = $ingredient;
 
