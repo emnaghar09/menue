@@ -12,6 +12,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\DishService;
+use FOS\RestBundle\Request\ParamFetcher;
+use  App\Service\FileUploaderService;
 
 
 class IngredientController extends AbstractController
@@ -43,10 +45,12 @@ public function __construct(IngredientListService $ingredientListService, DishSe
     }
 
     /**
+     * @Rest\FileParam(name="imagePath",description="photo de l'ingredient")
      * @Rest\Post("/ingredient", name="add_ingredient")
     */
-    public function addIngredient(Request $request, IngredientService $ingredientService){
-        return  $ingredientService->addIngredient($request->getContent());
+    public function addIngredient(Request $request, IngredientService $ingredientService, ParamFetcher $paramFetcher,  FileUploaderService $fileUploaderService){
+        $imageFile = $paramFetcher->get('imagePath');
+        return  $ingredientService->addIngredient($request, $imageFile , $fileUploaderService);
     }
 
     /**
@@ -63,8 +67,10 @@ public function __construct(IngredientListService $ingredientListService, DishSe
      * @Rest\Post("/ingredientList")
      * @Rest\View(serializerGroups={"show_ingredientList"})
      */
-    public function addIngredientList(Request $request)
+    public function addIngredientList( ParamFetcher $paramFetcher, Request $request)
     {
+        $image = $paramFetcher->get('image');
+        
         return  $this->ingredientListService->addIngredientList($request->getContent());
     }
 

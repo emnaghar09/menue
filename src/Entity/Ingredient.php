@@ -33,6 +33,7 @@ class Ingredient
 
     /**
      * @ORM\Column(type="array", nullable=true)
+     * @Serializer\Groups({"show_ingredient", "show_dish"})
      */
     private $description = [];
 
@@ -42,11 +43,11 @@ class Ingredient
      */
     private $image;
 
-    /**
-     * @Vich\UploadableField(mapping="ingredient_images", fileNameProperty="image")
-     * @var File|null
-     */
-    private $imageFile;
+    // /**
+    //  * @Vich\UploadableField(mapping="ingredient_images", fileNameProperty="image")
+    //  * @var File|null
+    //  */
+    // private $imageFile;
 
 
     public function __construct()
@@ -102,17 +103,17 @@ class Ingredient
         return $this;
     }
 
-    public function setImageFile(?File $imageFile = null): void
-    {
-        $this->imageFile = $imageFile;
+    // public function setImageFile(?File $imageFile = null): void
+    // {
+    //     $this->imageFile = $imageFile;
 
-        if ($imageFile instanceof UploadedFile) {
-            $this->updatedAt = new \DateTimeImmutable();
-        }
-    }
+    //     if ($imageFile instanceof UploadedFile) {
+    //         $this->updatedAt = new \DateTimeImmutable();
+    //     }
+    // }
 
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
+    // public function getImageFile(): ?File
+    // {
+    //     return $this->imageFile;
+    // }
 }
